@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Automerge minor and patch updates. Opt-in, not part of the baseline: no repo here protects `main`, so Renovate is the only gate, and it treats a repo with no CI as passing. A repo without a real test job must not extend this.",
+    "0.x minors are excluded. Under SemVer a pre-1.0 minor may break, and both SPM and Cargo resolve it happily while Renovate still labels it `minor` — so it needs a human."
+  ],
+  "automergeStrategy": "squash",
+  "automergeType": "pr",
+  "platformAutomerge": true,
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "Pre-1.0 minors are breaking changes wearing a minor's label.",
+      "automerge": false,
+      "matchCurrentVersion": "<1.0.0",
+      "matchUpdateTypes": [
+        "minor"
+      ]
+    }
+  ]
+}

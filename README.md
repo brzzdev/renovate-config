@@ -12,6 +12,11 @@ repo. There is nothing secret in a preset.
 | --- | --- | --- |
 | `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
+| `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos with a real CI job. Automerges minor and patch, excluding 0.x minors. |
+
+`automerge` is opt-in rather than part of the baseline. No repo here protects `main`, so Renovate is the
+only thing standing between a bump and `main` — and a repo with no CI has nothing red to stop it, so it
+would merge unattended and unverified. Extend it only where a test job actually runs.
 
 A repo that needs nothing else is the whole file:
 
