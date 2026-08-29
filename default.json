@@ -1,0 +1,11 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Baseline for every brzzdev repo.",
+    "The Dependency Dashboard is off: nothing here uses dependencyDashboardApproval or a concurrency limit, so the issue only ever restated what the open PR list already showed."
+  ],
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": false
+}

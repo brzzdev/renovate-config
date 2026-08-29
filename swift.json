@@ -1,0 +1,18 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Baseline plus the Point-Free grouping, for the Swift app and package repos.",
+    "The pointfreeco libraries depend on each other's versions, so bumped apart they resolve to a graph that does not build. One grouped PR keeps them in step."
+  ],
+  "extends": [
+    "github>brzzdev/renovate-config"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Point-Free",
+      "matchSourceUrls": [
+        "https://github.com/pointfreeco/**"
+      ]
+    }
+  ]
+}
