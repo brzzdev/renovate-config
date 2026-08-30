@@ -2,11 +2,13 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": [
     "Automerge minor and patch updates. Opt-in, not part of the baseline: no repo here protects `main`, so Renovate is the only gate, and it treats a repo with no CI as passing. A repo without a real test job must not extend this.",
-    "0.x minors are excluded. Under SemVer a pre-1.0 minor may break, and both SPM and Cargo resolve it happily while Renovate still labels it `minor` — so it needs a human."
+    "0.x minors are excluded. Under SemVer a pre-1.0 minor may break, and both SPM and Cargo resolve it happily while Renovate still labels it `minor` — so it needs a human.",
+    "Hold supported updates for three days before Renovate creates a branch. The default strict internal check keeps the update out of the repo while yanks and advisories have time to appear."
   ],
   "automergeStrategy": "squash",
   "automergeType": "pr",
   "platformAutomerge": true,
+  "minimumReleaseAge": "3 days",
   "packageRules": [
     {
       "matchUpdateTypes": [

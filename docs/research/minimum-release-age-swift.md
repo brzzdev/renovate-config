@@ -1,0 +1,46 @@
+# `minimumReleaseAge` with SwiftPM
+
+Verified on 2026-08-30 against Renovate 44.51.2.
+
+## Conclusion
+
+`minimumReleaseAge` works for the direct SwiftPM dependencies in this repo family. Their package URLs point to GitHub, so Renovate's `swift` manager selects the `github-tags` datasource. That datasource supplies a `releaseTimestamp`, and Renovate applies the age check to major, minor, and patch updates. With the default `internalChecksFilter: "strict"`, Renovate creates neither a branch nor a PR until an eligible version has cleared the configured age.
+
+The claim needs boundaries. `Package.resolved` is an artifact of the `Package.swift` update, not a separately extracted package file. The age check therefore covers the direct dependency that triggered the update, including its matching lockfile pin. It does not cover transitive-only pins, lock-file maintenance, or a lockfile-only update. A Swift dependency on a generic Git host uses `git-tags`, which has no release timestamps.
+
+## Why the GitHub-hosted Swift case is supported
+
+The Swift manager scans `Package.swift` and supports `git-tags`, `github-tags`, and `gitlab-tags` ([manager documentation](https://docs.renovatebot.com/modules/manager/swift/)). Its URL parser selects `github-tags` for GitHub, `gitlab-tags` for GitLab, and `git-tags` for other hosts ([source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/manager/swift/extract.ts#L135-L175), [tests](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/manager/swift/extract.spec.ts#L26-L98)). The example dependencies `pointfreeco/combine-schedulers`, `groue/GRDB.swift`, and `pointfreeco/sqlite-data` therefore take the `github-tags` path.
+
+`github-tags` declares timestamp support and copies each tag's timestamp into its release record. It also queries GitHub Releases and uses the publication time when that is later than the tag timestamp ([datasource source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/datasource/github-tags/index.ts#L20-L30), [mapping](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/datasource/github-tags/index.ts#L79-L117), [tests](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/datasource/github-tags/index.spec.ts#L90-L221)). For a lightweight tag, Renovate uses the target commit's `committedDate`. For an annotated tag, it uses the tagger date ([GraphQL adapter](https://github.com/renovatebot/renovate/blob/44.51.2/lib/util/github/graphql/query-adapters/tags-query-adapter.ts#L39-L98)).
+
+A first-party GitHub GraphQL query against the three lockfile examples returned both tag and release times. One concrete result was `sqlite-data` 1.6.6: tag target commit `0c79d7a` at `2026-06-10T20:29:18Z`, then GitHub Release publication at `2026-06-10T20:30:24Z` ([commit API](https://api.github.com/repos/pointfreeco/sqlite-data/commits/0c79d7a5748fc6d9ce7a1ba2b50f31b175305049), [release API](https://api.github.com/repos/pointfreeco/sqlite-data/releases/tags/1.6.6)). Renovate would use the later publication time. `GRDB.swift` v7.11.1 and `combine-schedulers` 1.2.0 also returned non-null times ([GRDB release API](https://api.github.com/repos/groue/GRDB.swift/releases/tags/v7.11.1), [combine-schedulers release API](https://api.github.com/repos/pointfreeco/combine-schedulers/releases/tags/1.2.0)). This check distinguishes the supported path from a datasource that only lists version strings.
+
+Renovate feeds that timestamp into its minimum-age filter after applying update-type config and matching package rules ([filter source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/workers/repository/process/lookup/filter-checks.ts#L121-L181)). Its exhaustive test marks major, minor, and patch as supported, while `pin`, `lockFileMaintenance`, and `lockfileUpdate` are unsupported ([test](https://github.com/renovatebot/renovate/blob/44.51.2/lib/workers/repository/process/lookup/filter-checks.spec.ts#L348-L375)). A separate test proves that strict mode leaves an update pending when no version has cleared the age and selects the newest older version when one has ([test](https://github.com/renovatebot/renovate/blob/44.51.2/lib/workers/repository/process/lookup/filter-checks.spec.ts#L141-L167)).
+
+The timestamp is not a registry publication timestamp. A force-pushed lightweight tag can still appear old because `github-tags` ages it from the commit date. Renovate documents this limitation explicitly ([minimum release age documentation](https://docs.renovatebot.com/key-concepts/minimum-release-age/#which-update-types-take-minimumreleaseage-into-account)). The delay works, but it cannot detect every form of tag replacement.
+
+## Supported and unsupported cases
+
+| SwiftPM case | Result |
+| --- | --- |
+| Direct dependency in `Package.swift`, hosted on GitHub | Supported through `github-tags`; major, minor, and patch updates are aged. |
+| Direct dependency hosted on GitLab | Supported through `gitlab-tags`, which uses the tag API's `created_at` field ([datasource documentation](https://docs.renovatebot.com/modules/datasource/gitlab-tags/)). |
+| Direct dependency on another Git host | No usable age timestamp. The fallback `git-tags` datasource reports no timestamp support ([documentation](https://docs.renovatebot.com/modules/datasource/git-tags/), [source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/datasource/git-tags/index.ts#L20-L48)). With the current default `minimumReleaseAgeBehaviour: "timestamp-required"`, Renovate holds it indefinitely. Setting `timestamp-optional` would let it through without an age check. |
+| Matching direct-dependency pin in `Package.resolved` | Covered because the Swift artifact updater receives only dependencies already selected for update, then changes their matching pins ([source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/manager/swift/artifacts.ts#L157-L239)). |
+| Transitive-only pin in `Package.resolved` | Not covered. Renovate says it does not manage transitive dependencies, leaving them to the package manager ([documentation](https://docs.renovatebot.com/key-concepts/minimum-release-age/#what-happens-to-transitive-dependencies)). |
+| Lock-file maintenance or lockfile-only update | Unsupported by the age check; the Swift artifact updater also rejects lock-file maintenance ([source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/modules/manager/swift/artifacts.ts#L157-L174)). |
+
+## Configuration precedence
+
+A top-level repository value overrides the same top-level value from an extended preset. Renovate resolves presets first, then merges the raw config over them ([configuration overview](https://docs.renovatebot.com/config-overview/#config-precedence), [source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/config/presets/index.ts#L254-L304)). If `automerge.json` sets three days, IGDBReleasePoller's top-level two days remains two days.
+
+A matching `packageRules` value overrides the top-level value for that dependency. Renovate applies matching rules after building the base release config, and each match merges over the current config ([filter source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/workers/repository/process/lookup/filter-checks.ts#L121-L155), [package-rule source](https://github.com/renovatebot/renovate/blob/44.51.2/lib/util/package-rules/index.ts#L36-L50)). Renovate has a focused test where a one-day package rule overrides a six-day top-level value ([test](https://github.com/renovatebot/renovate/blob/44.51.2/lib/workers/repository/process/lookup/filter-checks.spec.ts#L183-L198)). The `f1-api-cache` rule matching `*` therefore keeps its own value. If several package rules match, later rules can override earlier ones ([documentation](https://docs.renovatebot.com/configuration-options/#packagerules)).
+
+`internalChecksFilter` defaults to `strict`; this is a Renovate default, not something added by `config:recommended` ([option definition](https://github.com/renovatebot/renovate/blob/44.51.2/lib/config/options/index.ts#L2199-L2205), [documentation](https://docs.renovatebot.com/configuration-options/#internalchecksfilter)). Strict mode suppresses the branch and PR while all candidate versions are pending. `minimumReleaseAgeBehaviour` separately defaults to `timestamp-required` ([option definition](https://github.com/renovatebot/renovate/blob/44.51.2/lib/config/options/index.ts#L2153-L2165)).
+
+## What would falsify this conclusion
+
+For a GitHub-hosted direct Swift dependency with one newer version, a current Renovate debug run would falsify the supported conclusion if it showed the `swift` manager extracting `git-tags`, if the `github-tags` release record lacked `releaseTimestamp`, or if strict mode created the branch before `releaseTimestamp + minimumReleaseAge` without a manual override. The cleanest positive observation is a debug record with `datasource: "github-tags"` and a non-null `releaseTimestamp`, followed by the branch being reported as pending until the cutoff.
+
+For the unsupported boundaries, a `git-tags` release record containing a timestamp, or a transitive-only `Package.resolved` pin being independently held by Renovate's age check, would falsify them.
