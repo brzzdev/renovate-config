@@ -11,13 +11,16 @@ repo. There is nothing secret in a preset.
 | Preset | Extend with | For |
 | --- | --- | --- |
 | `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off. |
-| `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds weekly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
+| `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds monthly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
 | `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos with a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
 
 `automerge` is opt-in rather than part of the baseline. No repo here protects `main`, so Renovate is the
 only thing standing between a bump and `main` — and a repo with no CI has nothing red to stop it, so it
 would merge unattended and unverified. Extend it only where a test job actually runs.
+
+Lockfile maintenance is never automerged, even where both presets apply: a refreshed lockfile gets no
+release-age check, so it could land a crate published minutes earlier.
 
 The three-day hold applies to every supported update, including majors and 0.x minors that still need
 human review. Renovate raises security updates immediately without applying the hold.
