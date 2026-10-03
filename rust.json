@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Baseline plus lockfile maintenance, for the Rust crates.",
+    "Renovate only bumps requirements written in Cargo.toml. Once every one of those is satisfied, Cargo.lock is invisible to it and the transitive crates drift: perch fell about thirty behind before this was turned on. Lockfile maintenance raises a weekly PR that runs cargo update."
+  ],
+  "extends": [
+    "github>brzzdev/renovate-config"
+  ],
+  "lockFileMaintenance": {
+    "enabled": true
+  }
+}

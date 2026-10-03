@@ -11,6 +11,7 @@ repo. There is nothing secret in a preset.
 | Preset | Extend with | For |
 | --- | --- | --- |
 | `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off. |
+| `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds weekly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
 | `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos with a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
 
