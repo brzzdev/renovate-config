@@ -15,9 +15,10 @@ repo. There is nothing secret in a preset.
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
 | `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos with a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
 
-`automerge` is opt-in rather than part of the baseline. No repo here protects `main`, so Renovate is the
-only thing standing between a bump and `main` — and a repo with no CI has nothing red to stop it, so it
-would merge unattended and unverified. Extend it only where a test job actually runs.
+`automerge` is opt-in rather than part of the baseline. Renovate treats a repo with no CI as passing, so
+without a test job a bump would merge unattended and unverified. And `platformAutomerge` hands the merge
+to GitHub, which waits only for *required* checks — a test job the ruleset doesn't require can fail
+without stopping it. Extend it only where a test job runs **and** the repo's `Default` ruleset requires it.
 
 Lockfile maintenance is never automerged, even where both presets apply: a refreshed lockfile gets no
 release-age check, so it could land a crate published minutes earlier.
