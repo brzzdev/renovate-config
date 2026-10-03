@@ -13,11 +13,11 @@ repo. There is nothing secret in a preset.
 | `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off. |
 | `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds monthly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
-| `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos with a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
+| `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos whose ruleset requires a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
 
-`automerge` is opt-in rather than part of the baseline. No repo here protects `main`, so Renovate is the
-only thing standing between a bump and `main` — and a repo with no CI has nothing red to stop it, so it
-would merge unattended and unverified. Extend it only where a test job actually runs.
+`automerge` is opt-in rather than part of the baseline. It turns on GitHub's auto-merge as soon as Renovate
+opens the PR, and GitHub then waits only for required checks, so a failing test job the ruleset doesn't
+require won't stop the merge. Extend it only where the repo's ruleset requires a real test job.
 
 Lockfile maintenance is never automerged, even where both presets apply: a refreshed lockfile gets no
 release-age check, so it could land a crate published minutes earlier.
