@@ -13,7 +13,7 @@ repo. There is nothing secret in a preset.
 | `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off. |
 | `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds monthly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
-| `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos with a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
+| `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos whose ruleset requires a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
 
 `automerge` is opt-in rather than part of the baseline. Renovate treats a repo with no CI as passing, so
 without a test job a bump would merge unattended and unverified. And `platformAutomerge` hands the merge
