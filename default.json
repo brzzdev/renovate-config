@@ -15,6 +15,17 @@
         "npm"
       ],
       "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Every npm update rewrites pnpm-lock.yaml, so separate PRs conflict as soon as one merges. One group shares one lockfile change; majors stay separate for review. Under automerge, a 0.x minor in the group holds the whole PR for a human.",
+      "groupName": "npm non-major",
+      "matchManagers": [
+        "npm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ]
     }
   ]
 }
