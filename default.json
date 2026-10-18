@@ -7,5 +7,14 @@
   "extends": [
     "config:recommended"
   ],
-  "dependencyDashboard": false
+  "dependencyDashboard": false,
+  "packageRules": [
+    {
+      "description": "pnpm 11 rejects lockfile entries published within the last day (`minimumReleaseAge`), so an npm update raised sooner fails CI until it ages. Three days rather than one matches automerge's hold, so the two presets agree in either extend order.",
+      "matchManagers": [
+        "npm"
+      ],
+      "minimumReleaseAge": "3 days"
+    }
+  ]
 }
