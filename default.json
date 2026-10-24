@@ -2,10 +2,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": [
     "Baseline for every brzzdev repo.",
-    "The Dependency Dashboard is off: nothing here uses dependencyDashboardApproval or a concurrency limit, so the issue only ever restated what the open PR list already showed."
+    "The Dependency Dashboard is off: nothing here uses dependencyDashboardApproval or a concurrency limit, so the issue only ever restated what the open PR list already showed.",
+    "GitHub Actions are pinned to full commit SHAs: a tag can be moved to other code, a SHA cannot. Renovate keeps the original tag as a comment beside each pin, so a workflow still says which version it tracks."
   ],
   "extends": [
-    "config:recommended"
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
   ],
   "dependencyDashboard": false,
   "packageRules": [
