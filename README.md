@@ -10,7 +10,7 @@ repo. There is nothing secret in a preset.
 
 | Preset | Extend with | For |
 | --- | --- | --- |
-| `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off, npm updates held for three days to clear pnpm's release-age check, npm minors and patches grouped into one PR. |
+| `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off, GitHub Actions pinned to commit SHAs, npm updates held for three days to clear pnpm's release-age check, npm minors and patches grouped into one PR. |
 | `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds monthly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
 | `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos whose ruleset requires a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
