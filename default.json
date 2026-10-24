@@ -3,11 +3,11 @@
   "description": [
     "Baseline for every brzzdev repo.",
     "The Dependency Dashboard is off: nothing here uses dependencyDashboardApproval or a concurrency limit, so the issue only ever restated what the open PR list already showed.",
-    "GitHub Actions are pinned to full commit SHAs: a tag can be moved to other code, a SHA cannot. Renovate keeps the original tag as a comment beside each pin, so a workflow still says which version it tracks."
+    "GitHub Actions are pinned to full commit SHAs: a tag can be moved to other code, a SHA cannot. Each pin follows a full version (`# v7.0.1`) rather than a floating major, so an update is a minor or patch that the release-age hold dates by its release. A floating tag moved to new code keeps its original date and would pass the hold at once."
   ],
   "extends": [
     "config:recommended",
-    "helpers:pinGitHubActionDigests"
+    "helpers:pinGitHubActionDigestsToSemver"
   ],
   "dependencyDashboard": false,
   "packageRules": [

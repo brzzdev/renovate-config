@@ -18,6 +18,13 @@
       "automerge": true
     },
     {
+      "description": "Pinning an action freezes what its tag points to now, and the hold dates that release. `digest` updates stay manual: a re-pointed tag keeps its original date, so the hold cannot catch it.",
+      "automerge": true,
+      "matchUpdateTypes": [
+        "pinDigest"
+      ]
+    },
+    {
       "description": "Pre-1.0 minors are breaking changes wearing a minor's label.",
       "automerge": false,
       "matchCurrentVersion": "<1.0.0",
