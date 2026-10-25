@@ -10,7 +10,7 @@ repo. There is nothing secret in a preset.
 
 | Preset | Extend with | For |
 | --- | --- | --- |
-| `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off, GitHub Actions pinned to commit SHAs, npm updates held for three days to clear pnpm's release-age check, npm minors and patches grouped into one PR. |
+| `default.json` | `github>brzzdev/renovate-config` | Everything. `config:recommended`, Dependency Dashboard off, GitHub Actions pinned to commit SHAs and tracked by full version, npm updates held for three days to clear pnpm's release-age check, npm minors and patches grouped into one PR. |
 | `rust.json` | `github>brzzdev/renovate-config:rust` | Rust crates. Adds monthly lockfile maintenance, so `Cargo.lock` keeps up with transitive releases. |
 | `swift.json` | `github>brzzdev/renovate-config:swift` | Swift apps and packages. Adds the Point-Free grouping. |
 | `automerge.json` | `github>brzzdev/renovate-config:automerge` | Repos whose ruleset requires a real CI job. Holds supported updates for three days, then automerges minor and patch, excluding 0.x minors. |
@@ -24,6 +24,11 @@ release-age check, so it could land a crate published minutes earlier.
 
 The three-day hold applies to every supported update, including majors and 0.x minors that still need
 human review. Renovate raises security updates immediately without applying the hold.
+
+A GitHub Action update is dated by its tag's commit, so a tag force-pushed to new code passes the hold at
+once. That is why actions track full versions, and why pin and `digest` PRs never automerge: a `digest`
+update only comes from a re-pointed tag, and the first pin of a floating major like `@v7` skips the age
+check.
 
 A repo that needs nothing else is the whole file:
 
