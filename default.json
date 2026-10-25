@@ -3,7 +3,7 @@
   "description": [
     "Baseline for every brzzdev repo.",
     "The Dependency Dashboard is off: nothing here uses dependencyDashboardApproval or a concurrency limit, so the issue only ever restated what the open PR list already showed.",
-    "GitHub Actions are pinned to full commit SHAs: a tag can be moved to other code, a SHA cannot. Each pin follows a full version (`# v7.0.1`), not a floating major: a moved floating tag keeps its original date, so it would pass the release-age hold at once."
+    "GitHub Actions are pinned to full commit SHAs: a tag can be moved to other code, a SHA cannot. Pins track full versions (`# v7.0.1`) rather than floating majors, so each update is a new release tag that the release-age hold can date."
   ],
   "extends": [
     "config:recommended",

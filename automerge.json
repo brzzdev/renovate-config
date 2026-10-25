@@ -18,13 +18,6 @@
       "automerge": true
     },
     {
-      "description": "A pin swaps a tag for the SHA it already points to, so nothing that runs changes. `digest` updates stay manual: a re-pointed tag keeps its original date, so the hold cannot catch it.",
-      "automerge": true,
-      "matchUpdateTypes": [
-        "pinDigest"
-      ]
-    },
-    {
       "description": "Pre-1.0 minors are breaking changes wearing a minor's label.",
       "automerge": false,
       "matchCurrentVersion": "<1.0.0",
