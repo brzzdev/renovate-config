@@ -30,7 +30,7 @@
       ]
     },
     {
-      "description": "Each action update rewrites a `uses:` line, and a workflow's lines sit side by side, so separate PRs conflict as soon as one merges. One group carries them together; majors stay separate for review. Under automerge, a pin or `digest` update in the group holds the whole PR for a human.",
+      "description": "Each action update rewrites a `uses:` line, and those lines sit side by side, so separate PRs conflict as soon as one merges. One group carries them together; majors stay separate for review. Under automerge, a pin or `digest` update in the group holds the whole PR for a human.",
       "groupName": "GitHub Actions non-major",
       "matchManagers": [
         "github-actions"
