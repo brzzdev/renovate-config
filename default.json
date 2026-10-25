@@ -30,8 +30,9 @@
       ]
     },
     {
-      "description": "Each action update rewrites a `uses:` line, and those lines sit side by side, so separate PRs conflict as soon as one merges. One group carries them together; majors stay separate for review. Under automerge, a pin or `digest` update in the group holds the whole PR for a human.",
+      "description": "Each action update rewrites a `uses:` line, and those lines sit side by side, so separate PRs conflict as soon as one merges. One group carries them together; majors stay separate for review. Pins carry Renovate's built-in `pin-dependencies` slug, so `groupSlug` is set to keep them in the group. Under automerge, a pin, `digest` or 0.x minor in the group holds the whole PR for a human.",
       "groupName": "GitHub Actions non-major",
+      "groupSlug": "github-actions-non-major",
       "matchManagers": [
         "github-actions"
       ],
