@@ -27,7 +27,8 @@ human review. Renovate raises security updates immediately without applying the 
 
 A GitHub Action update is dated by its tag's commit, so a tag force-pushed to new code passes the hold at
 once. That is why actions track full versions, and why pin and `digest` PRs never automerge: a `digest`
-update only comes from a re-pointed tag, and the first pin of a floating major like `@v7` skips the age check.
+update only comes from a re-pointed tag, and the first pin of a floating major like `@v7` skips the age
+check.
 
 A repo that needs nothing else is the whole file:
 
