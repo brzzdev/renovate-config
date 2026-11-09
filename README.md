@@ -39,8 +39,10 @@ A repo that needs nothing else is the whole file:
 }
 ```
 
-Repos with their own rules — automerge policy, ecosystem quirks — extend a preset and keep those local,
-where the reason for them is next to the code they protect.
+Policy lives here. A rule that would hold for more than one repo, such as grouping an ecosystem's updates,
+goes in a preset, even when only one repo needs it today. A repo's own `renovate.json` extends presets, `automerge`
+included when it wants automerge, and adds only rules about that repo, such as pinning a dependency it can't
+move yet or ignoring a vendored path, where the reason for them is next to the code they protect.
 
 ## Changing a preset
 
